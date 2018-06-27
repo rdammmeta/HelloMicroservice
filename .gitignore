@@ -1,5 +1,6 @@
 # Target directory
 target/
+target/*
 
 # Windows thumbnail cache files
 Thumbs.db
