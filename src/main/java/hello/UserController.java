@@ -30,7 +30,9 @@ public class UserController {
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public ResponseEntity<?> post(User user) {
 		try {
-			return new ResponseEntity<>(userService.insertUser(user), HttpStatus.OK);
+			String uuid = userService.insertUser(user);
+			User fetchedUser = userService.getUserByUuid(uuid);
+			return new ResponseEntity<>(fetchedUser, HttpStatus.OK);
 		} catch (DaoException e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -43,9 +45,12 @@ public class UserController {
 			if (user.getUuid() != null && !user.getUuid().equals("")
 					&& userService.getUserByUuid(user.getUuid()) != null) {
 				userService.updateUser(user);
-				return new ResponseEntity<>(user.getUuid(), HttpStatus.OK);
+				User fetchedUser = userService.getUserByUuid(user.getUuid());
+				return new ResponseEntity<>(fetchedUser, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<>(userService.insertUser(user), HttpStatus.OK);
+				String uuid = userService.insertUser(user);
+				User fetchedUser = userService.getUserByUuid(uuid);
+				return new ResponseEntity<>(fetchedUser, HttpStatus.OK);
 			}
 		} catch (DaoException e) {
 			e.printStackTrace();
