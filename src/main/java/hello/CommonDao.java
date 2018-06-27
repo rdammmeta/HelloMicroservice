@@ -3,12 +3,15 @@ package hello;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CommonDao<T> {
+	
+	@Autowired
+    private SessionFactory sessionFactory;
 
 	public static class DaoException extends Exception {
 		private static final long serialVersionUID = 4678587740739335546L;
@@ -34,15 +37,14 @@ public class CommonDao<T> {
 		}
 	}
 
-	public Session openSession() {
-		TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
-		return HibernateUtil.getHibernateSession();
+	public Session getHibernateSession() {
+		return sessionFactory.getCurrentSession();
 	}
 
 	// Fetches.
-	protected T get(Session session, String hql) throws DaoException {
+	protected T get(String hql) throws DaoException {
 		try {
-			Query q = session.createQuery(hql);
+			Query q = this.getHibernateSession().createQuery(hql);
 			List<T> l = q.list();
 			if ((l != null) && (l.size() > 0)) {
 				return l.get(0);
@@ -53,9 +55,9 @@ public class CommonDao<T> {
 		}
 	}
 
-	protected T get(Session session, String hql, Map<String, Object> params) throws DaoException {
+	protected T get(String hql, Map<String, Object> params) throws DaoException {
 		try {
-			Query q = session.createQuery(hql);
+			Query q = this.getHibernateSession().createQuery(hql);
 			if ((params != null) && !params.isEmpty()) {
 				for (String key : params.keySet()) {
 					q.setParameter(key, params.get(key));
@@ -71,18 +73,18 @@ public class CommonDao<T> {
 		}
 	}
 
-	protected List<T> find(Session session, String hql) throws DaoException {
+	protected List<T> find(String hql) throws DaoException {
 		try {
-			Query q = session.createQuery(hql);
+			Query q = this.getHibernateSession().createQuery(hql);
 			return q.list();
 		} catch (Exception e) {
 			throw new DaoException(e);
 		}
 	}
 
-	protected List<T> find(Session session, String hql, Map<String, Object> params) throws DaoException {
+	protected List<T> find(String hql, Map<String, Object> params) throws DaoException {
 		try {
-			Query q = session.createQuery(hql);
+			Query q = this.getHibernateSession().createQuery(hql);
 			if ((params != null) && !params.isEmpty()) {
 				for (String key : params.keySet()) {
 					q.setParameter(key, params.get(key));
@@ -94,18 +96,18 @@ public class CommonDao<T> {
 		}
 	}
 
-	protected List<T> find(Session session, String hql, int page, int rows) throws DaoException {
+	protected List<T> find(String hql, int page, int rows) throws DaoException {
 		try {
-			Query q = session.createQuery(hql);
+			Query q = this.getHibernateSession().createQuery(hql);
 			return q.setFirstResult((page - 1) * rows).setMaxResults(rows).list();
 		} catch (Exception e) {
 			throw new DaoException(e);
 		}
 	}
 
-	protected List<T> find(Session session, String hql, Map<String, Object> params, int page, int rows) throws DaoException {
+	protected List<T> find(String hql, Map<String, Object> params, int page, int rows) throws DaoException {
 		try {
-			Query q = session.createQuery(hql);
+			Query q = this.getHibernateSession().createQuery(hql);
 			if ((params != null) && !params.isEmpty()) {
 				for (String key : params.keySet()) {
 					q.setParameter(key, params.get(key));
@@ -118,10 +120,10 @@ public class CommonDao<T> {
 	}
 
 	// Insertions.
-	protected Serializable save(Session session, T o) throws DaoException {
+	protected Serializable save(T o) throws DaoException {
 		try {
 			if (o != null) {
-				return session.save(o);
+				return this.getHibernateSession().save(o);
 			}
 			return null;
 		} catch (Exception e) {
@@ -130,10 +132,10 @@ public class CommonDao<T> {
 	}
 
 	// Updates.
-	protected void update(Session session, T o) throws DaoException {
+	protected void update(T o) throws DaoException {
 		try {
 			if (o != null) {
-				session.update(o);
+				this.getHibernateSession().update(o);
 			}
 		} catch (Exception e) {
 			throw new DaoException(e);
@@ -141,10 +143,10 @@ public class CommonDao<T> {
 	}
 
 	// Deletions.
-	protected void delete(Session session, T o) throws DaoException {
+	protected void delete(T o) throws DaoException {
 		try {
 			if (o != null) {
-				session.delete(o);
+				this.getHibernateSession().delete(o);
 			}
 		} catch (Exception e) {
 			throw new DaoException(e);
