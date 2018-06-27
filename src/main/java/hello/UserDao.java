@@ -1,6 +1,5 @@
 package hello;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +23,6 @@ public class UserDao extends CommonDao<User> {
 	}
 
 	public String insertUser(Session session, User user) throws DaoException {
-		// TODO: Generate UUID.
-		String uuid = (String) Long.toString(new Date().getTime());
-		user.setUuid(uuid);
 		return (String) super.save(session, user);
 	}
 
