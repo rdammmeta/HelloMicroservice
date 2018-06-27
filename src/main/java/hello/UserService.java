@@ -1,6 +1,5 @@
 package hello;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,50 +16,23 @@ public class UserService {
 	private UserDao userDao;
 
 	public User getUserByUuid(String uuid) throws DaoException {
-		User user = null;
-		try {
-			user = userDao.getUserByUuid(uuid);
-		} catch (DaoException e) {
-			throw e;
-		}
-		return user;
+		return userDao.getUserByUuid(uuid);
 	}
 
 	public List<User> getAllUsers() throws DaoException {
-		List<User> users = null;
-		try {
-			users = userDao.getAllUsers();
-		} catch (DaoException e) {
-			throw e;
-		}
-		return users;
+		return userDao.getAllUsers();
 	}
 
 	public String insertUser(User user) throws DaoException {
-		user.setUuid(Long.toString(new Date().getTime()));
-		String uuid = null;
-		try {
-			uuid = userDao.insertUser(user);
-		} catch (DaoException e) {
-			throw e;
-		}
-		return uuid;
+		return userDao.insertUser(user);
 	}
 
 	public void updateUser(User user) throws DaoException {
-		try {
-			userDao.updateUser(user);
-		} catch (DaoException e) {
-			throw e;
-		}
+		userDao.updateUser(user);
 	}
 
 	public void deleteUser(String uuid) throws DaoException {
-		try {
-			userDao.deleteUser(uuid);
-		} catch (DaoException e) {
-			throw e;
-		}
+		userDao.deleteUser(uuid);
 	}
 
 }

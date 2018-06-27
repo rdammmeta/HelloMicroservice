@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -16,13 +17,13 @@ public class User implements Serializable {
 
 	private static final long serialVersionUID = 4417965101703511714L;
 	@Id
-	@GeneratedValue(generator = "uuid2")
+	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(name = "uuid", unique = true, nullable = false)
 	private String uuid;
 	@Column(name = "name", nullable = false)
 	private String name;
-	
+
 	public User() {
 	}
 
