@@ -28,7 +28,9 @@ public class UserService {
 	}
 
 	public void updateUser(User user) throws DaoException {
-		userDao.updateUser(user);
+		User existingUser = userDao.getUserByUuid(user.getUuid());
+		existingUser.setName(user.getName());
+		userDao.updateUser(existingUser);
 	}
 
 	public void deleteUser(String uuid) throws DaoException {

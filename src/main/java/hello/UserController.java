@@ -20,7 +20,12 @@ public class UserController {
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public ResponseEntity<?> get(@RequestParam(value = "uuid") String uuid) {
 		try {
-			return new ResponseEntity<>(userService.getUserByUuid(uuid), HttpStatus.OK);
+			User user = userService.getUserByUuid(uuid);
+			if (user != null) {
+				return new ResponseEntity<>(userService.getUserByUuid(uuid), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
 		} catch (DaoException e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
