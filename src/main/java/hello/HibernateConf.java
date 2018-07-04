@@ -5,10 +5,8 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -17,9 +15,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 public class HibernateConf {
-
-	@Autowired
-	private Environment env;
+	
+	private static final String ENV_JDBC_URL = "JDBC_URL";
+	private static final String ENV_JDBC_USER = "JDBC_USER";
+	private static final String ENV_JDBC_PASS = "JDBC_PASS";
 
 	@Bean
 	public LocalSessionFactoryBean sessionFactory() {
@@ -34,9 +33,9 @@ public class HibernateConf {
 	public DataSource dataSource() {
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		dataSource.setUrl(env.getProperty("jdbc.url"));
-		dataSource.setUsername(env.getProperty("jdbc.user"));
-		dataSource.setPassword(env.getProperty("jdbc.pass"));
+		dataSource.setUrl(EnvironmentUtil.getEnvironmentVariable(ENV_JDBC_URL));
+		dataSource.setUsername(EnvironmentUtil.getEnvironmentVariable(ENV_JDBC_USER));
+		dataSource.setPassword(EnvironmentUtil.getEnvironmentVariable(ENV_JDBC_PASS));
 		return dataSource;
 	}
 
